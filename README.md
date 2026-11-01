@@ -1,4 +1,7 @@
 # Orbitask — TP Git et GitHub
+## Équipe du projet
+- Yassine Nasr
+- Brahim Nait Mohand
 
 Site vitrine statique utilisé pour le TP « de la pull request à la production ».
 
