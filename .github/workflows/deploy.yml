@@ -1,0 +1,41 @@
+name: Mise en production
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: production
+  cancel-in-progress: false
+
+jobs:
+  deployer:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploiement.outputs.page_url }}
+    steps:
+      - name: Recuperer le code de la version
+        uses: actions/checkout@v5
+      - name: Derniere verification avant la prod
+        run: bash tests/verifier.sh
+      - name: Preparer le site et y ecrire le numero de version
+        run: |
+          mkdir _site
+          cp *.html *.css _site/
+          sed -i "s/__VERSION__/${GITHUB_REF_NAME}/g" _site/*.html
+      - name: Configurer GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Empaqueter le site
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+      - name: Mettre en ligne
+        id: deploiement
+        uses: actions/deploy-pages@v4

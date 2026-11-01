@@ -1,0 +1,16 @@
+name: Verification
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  verifier:
+    name: verifier
+    runs-on: ubuntu-latest
+    steps:
+      - name: Recuperer le code du depot
+        uses: actions/checkout@v5
+      - name: Lancer les tests du site
+        run: bash tests/verifier.sh
